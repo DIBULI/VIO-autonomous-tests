@@ -1,6 +1,6 @@
 #!/bin/bash
 current_directory="$(cd "$(dirname "$0")" && pwd)"
-project_root_dir=${current_directory}/..
+project_root_dir=${current_directory}/../..
 
 # https://cvg.cit.tum.de/data/datasets/visual-inertial-dataset
 wget -R "index.*" -m -np -nH --no-check-certificate -e robots=off \
