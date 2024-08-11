@@ -22,7 +22,9 @@ RUN apt-get update && apt-get install -y \
     libopencv-dev \
     # required by pangolin
     libgl1-mesa-dev libglew-dev pkg-config libegl1-mesa-dev libwayland-dev libxkbcommon-dev wayland-protocols \
-    ros-noetic-catkin python3-catkin-tools ros-noetic-cv-bridge && \ 
+    ros-noetic-catkin python3-catkin-tools ros-noetic-cv-bridge \
+    # required by openvins
+    libceres-dev && \ 
     apt-get clean autoclean && \
     apt-get autoremove --yes && \
     rm -rf /var/lib/apt/lists/* && \
