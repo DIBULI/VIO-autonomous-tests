@@ -67,6 +67,7 @@ for BAG in "${EUROC_BAGS[@]}"; do
 
     sleep 0.1
   done
+  cd -
 done
 kill $ROSCORE_PID
 

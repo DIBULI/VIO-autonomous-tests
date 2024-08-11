@@ -11,8 +11,3 @@ DOCKER_RESULT_DIR=/root/VIO-auto-tests
 sudo rm -r $TEST_RESULT_FOLDER
 
 docker run -v ${DATASET_PATH}:/data -v ${TEST_RESULT_FOLDER}:${DOCKER_RESULT_DIR}/tests_result ghcr.io/dibuli/vio-autonomous-test:latest
-
-
-
-
-
