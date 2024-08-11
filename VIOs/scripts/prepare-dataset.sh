@@ -6,6 +6,6 @@ DATA_PATH=~/data
 
 mkdir -p ${DATA_PATH}/dataset/vios
 
-bash -c "cd ${DATA_PATH}/dataset/vios && bash ${current_directory}/datasets/tumvi-dataset.sh"
-
 bash -c "cd ${DATA_PATH}/dataset/vios && bash ${current_directory}/datasets/euroc-dataset.sh"
+
+# bash -c "cd ${DATA_PATH}/dataset/vios && bash ${current_directory}/datasets/tumvi-dataset.sh"

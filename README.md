@@ -8,16 +8,16 @@ This repo has been tested with the docker based on Ubuntu 20.04_x86.
 
 ### Prepare the dataset
 
-Use the VIOs/scripts/prepare-dataset.sh to download the required dataset
-
+Use the `scripts/prepare-dataset.sh` to download the required dataset
+You can modify the variable `DATA_PATH` in the shell script where the datasets are gonna be stored
 ```
-bash VIOs/scripts/prepare-dataset.sh
+bash /scripts/prepare-dataset.sh
 ```
 
 ### Initialize the workspace using Docker
 
 ```
-cd VIOs && docker build .
+bash build.sh
 ```
 
 ### Run all the tests
@@ -26,6 +26,11 @@ All the results will be output into the `tests-result` directory.
 
 #### Run specific tests
 
+You can modify the variable `DATA_PATH` in the shell script to match your dataset folder location.
+You can also modify the variable `TEST_RESULT_FOLDER` to define where to store all the results
 ```
-// TODO
+bash run.sh
 ```
+
+The VIOs result will be stored under the folder defined by `TEST_RESULT_FOLDER`.
+
