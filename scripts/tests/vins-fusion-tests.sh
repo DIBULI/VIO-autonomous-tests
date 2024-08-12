@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Set the current directory and project root directory
 current_directory="$(cd "$(dirname "$0")" && pwd)"
 project_root_dir=${current_directory}/../..
 
