@@ -47,6 +47,8 @@ def process_camera_data(bag, dataset_path, camera_folders, bridge, verbose):
             timestamp_ns = row.iloc[0]
             timestamp = rospy.Time.from_sec(int(timestamp_ns) * 1e-9)
             image_path = os.path.join(cam_path, 'data', row['filename'])
+            if verbose:
+                print(f"Reading image from {image_path}")
             image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
             image_msg = bridge.cv2_to_imgmsg(image, encoding="mono8")
             image_msg.header.stamp = timestamp
@@ -142,6 +144,10 @@ def process_vicon_data(bag, dataset_path, vicon_folders, verbose):
             bag.write(f'/{vicon}', odom_msg, timestamp)
 
 def create_bag(output_bag, dataset_path, verbose=False):
+    output_dir = os.path.dirname(output_bag)
+    if output_dir and not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     bridge = CvBridge()
     bag = rosbag.Bag(output_bag, 'w')
     
@@ -152,6 +158,13 @@ def create_bag(output_bag, dataset_path, verbose=False):
         groundtruth_folders = find_sensor_folders(dataset_path, 'visual-inertial')
         vicon_folders = find_sensor_folders(dataset_path, 'pose')
         
+        if verbose:
+            print(f"Found camera folders: {camera_folders}")
+            print(f"Found IMU folders: {imu_folders}")
+            print(f"Found Leica folders: {leica_folders}")
+            print(f"Found ground truth folders: {groundtruth_folders}")
+            print(f"Found Vicon folders: {vicon_folders}")
+
         process_camera_data(bag, dataset_path, camera_folders, bridge, verbose)
         process_imu_data(bag, dataset_path, imu_folders, verbose)
         process_leica_data(bag, dataset_path, leica_folders, verbose)
@@ -169,7 +182,7 @@ def handle_zip_input(zip_path, verbose=False):
         print(f"Extracting {zip_path} to temporary directory {temp_dir}...")
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall(temp_dir)
-    extracted_dir = os.path.join(temp_dir, os.listdir(temp_dir)[0])  # Assuming single top-level directory in ZIP
+    extracted_dir = os.path.join(temp_dir, os.listdir(temp_dir)[0])
     if verbose:
         print(f"Extracted to {extracted_dir}")
     return extracted_dir
