@@ -27,7 +27,7 @@ for ZIP in "${EUROC_ZIPS[@]}"; do
     SEQUENCE_NAME="${SEQUENCE_NAME_WITH_EXT%.*}"
     DIR_PATH=$(dirname "$ZIP")
     if [ ! -f "$DIR_PATH/${SEQUENCE_NAME}.bag" ]; then
-      python3 ${current_directory}/datasets/asl_to_rosbag.py --path $ZIP --output $DIR_PATH/${SEQUENCE_NAME}.bag
+      python3 ${current_directory}/datasets/asl_to_rosbag.py -v --path $ZIP --output $DIR_PATH/${SEQUENCE_NAME}.bag
     fi
 done
 

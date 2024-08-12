@@ -183,7 +183,7 @@ def handle_zip_input(zip_path, verbose=False):
         print(f"Extracting {zip_path} to temporary directory {temp_dir}...")
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall(temp_dir)
-    extracted_dir = os.path.join(temp_dir, os.listdir(temp_dir)[0])
+    extracted_dir = os.path.join(temp_dir, "mav0")
     if verbose:
         print(f"Extracted to {extracted_dir}")
     return extracted_dir
