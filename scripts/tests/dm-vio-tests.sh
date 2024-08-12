@@ -74,12 +74,16 @@ for BAG in "${EUROC_BAGS[@]}"; do
   
   mv $bag_file odom_result.bag
 
+  python3 ${current_directory}/python/cal_rosbag_frequency.py odom_result.bag /result > odom_result.hz
+
   # merge the bags of result and grount truth into one bag
   ln -s ${BAG} ${SEQUENCE_NAME}.bag
   rosbag-merge --outbag_name result --topics /state_groundtruth_estimate0 /result --write_bag
   evo_traj bag result.bag /result --save_plot plot.pdf --full_check -as --ref /state_groundtruth_estimate0
   evo_ape bag result.bag /state_groundtruth_estimate0 /result -as
   evo_rpe bag result.bag /state_groundtruth_estimate0 /result -as
+
+  
   cd -
 done
 kill $ROSCORE_PID
