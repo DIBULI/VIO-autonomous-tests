@@ -144,9 +144,10 @@ def process_vicon_data(bag, dataset_path, vicon_folders, verbose):
             bag.write(f'/{vicon}', odom_msg, timestamp)
 
 def create_bag(output_bag, dataset_path, verbose=False):
-    output_dir = os.path.dirname(output_bag)
-    if output_dir and not os.path.exists(output_dir):
+    output_dir = os.path.abspath(os.path.dirname(output_bag))
+    if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+    output_bag = os.path.join(output_dir, os.path.basename(output_bag))
 
     bridge = CvBridge()
     bag = rosbag.Bag(output_bag, 'w')
