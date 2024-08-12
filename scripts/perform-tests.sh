@@ -31,6 +31,6 @@ for ZIP in "${EUROC_ZIPS[@]}"; do
     fi
 done
 
-# bash ${current_directory}/tests/dm-vio-tests.sh
+bash ${current_directory}/tests/dm-vio-tests.sh
 
 bash ${current_directory}/tests/vins-fusion-tests.sh
