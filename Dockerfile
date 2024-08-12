@@ -32,7 +32,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install \
     # required by dm-vio-python-tools
-    tqdm ruamel.yaml pyquaternion matplotlib tabulate
+    tqdm ruamel.yaml pyquaternion matplotlib tabulate \
+    numpy==1.24.4 evo==1.29.0 rosbag-merge \
+    # required by converting euroc dataset
+    argparse pandas pyyaml
 
 COPY scripts/repos ${WORKDIR}/VIO-auto-tests/scripts/repos
 COPY scripts/init-workspace.sh ${WORKDIR}/VIO-auto-tests/scripts/init-workspace.sh
@@ -42,6 +45,7 @@ RUN bash ${WORKDIR}/VIO-auto-tests/scripts/init-workspace.sh
 COPY scripts/build-workspace.sh ${WORKDIR}/VIO-auto-tests/scripts/build-workspace.sh
 RUN bash ${WORKDIR}/VIO-auto-tests/scripts/build-workspace.sh
 
+COPY scripts/datasets ${WORKDIR}/VIO-auto-tests/scripts/datasets
 COPY scripts/tests ${WORKDIR}/VIO-auto-tests/scripts/tests
 COPY scripts/perform-tests.sh ${WORKDIR}/VIO-auto-tests/scripts/perform-tests.sh
 
