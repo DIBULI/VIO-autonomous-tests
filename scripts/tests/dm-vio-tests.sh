@@ -49,15 +49,29 @@ for BAG in "${EUROC_BAGS[@]}"; do
 
   rosrun dmvio_ros node calib=${TEST_RESULT_PATH}/dm-vio-tests/euroc/${SEQUENCE_NAME}/camera.txt \
     settingsFile=$DMVIO_BUILD/../configs/euroc.yaml \
-    mode=1 nogui=1 preset=1 useimu=1 quiet=1 init_requestFullResetNormalizedErrorThreshold=0.8 init_pgba_skipFirstKFs=1 \
-    rosbag=${BAG} loadRosbagThread=1 > ${SEQUENCE_NAME}.output &
-  
+    mode=1 nogui=1 preset=1 useimu=1 quiet=0 init_requestFullResetNormalizedErrorThreshold=0.8 init_pgba_skipFirstKFs=1 \
+    > ${SEQUENCE_NAME}.output &
   DMVIO_ROS_PID=$!
+
+  # wait for dmvio_ros to be initialized completely
+  sleep 5
+
+  # for each result, we save the odometry result as a ros bag
+  echo "Start to record the odometry result"
+  # use output redirect function to avoid seeing the error message when try to kill the rosbag process
+  # https://github.com/ros/ros_comm/issues/2235
+  rosbag record -O odom_result /dmvio/unscaled_pose > rosbag.output 2>&1 &
+  ROSBAG_RECORD_PID=$!
+  sleep 1
+
+  echo "Start to play the dataset bag"
+  rosbag play ${BAG} &
+  ROSBAG_PLAY_PID=$!
 
   CSV_FILE=system.csv
   touch ${CSV_FILE}
 
-  while ps -p $DMVIO_ROS_PID > /dev/null 2>&1; do
+  while ps -p $ROSBAG_PLAY_PID > /dev/null 2>&1; do
     TIMESTAMP=$(date +%s%3N)
     CPU_MEM_USAGE=$(ps -p $DMVIO_ROS_PID -o %cpu,%mem --no-headers)
 
@@ -68,22 +82,24 @@ for BAG in "${EUROC_BAGS[@]}"; do
     sleep 0.1
   done
 
-  # for each result, we save the odometry result as a ros bag
-  evo_traj tum result.txt --save_as_bag
-  bag_file=$(find . -maxdepth 1 -type f -name "*.bag")
-  
-  mv $bag_file odom_result.bag
+  sleep 5
+  echo "Killing rosbag process"
+  while kill -SIGINT $ROSBAG_RECORD_PID 2>/dev/null; do
+    echo "Waiting for process $ROSBAG_RECORD_PID to be killed..."
+    sleep 1
+  done
+  echo "Killing dmvio ros process"
+  kill $DMVIO_ROS_PID
 
-  python3 ${current_directory}/python/cal_rosbag_frequency.py odom_result.bag /result > odom_result.hz
+  python3 ${current_directory}/python/cal_rosbag_frequency.py odom_result.bag /dmvio/unscaled_pose > odom_result.hz
 
   # merge the bags of result and grount truth into one bag
   ln -s ${BAG} ${SEQUENCE_NAME}.bag
-  rosbag-merge --outbag_name result --topics /state_groundtruth_estimate0 /result --write_bag
-  evo_traj bag result.bag /result --save_plot plot.pdf --full_check -as --ref /state_groundtruth_estimate0
-  evo_ape bag result.bag /state_groundtruth_estimate0 /result -as
-  evo_rpe bag result.bag /state_groundtruth_estimate0 /result -as
+  rosbag-merge --outbag_name result --topics /state_groundtruth_estimate0 /dmvio/unscaled_pose --write_bag
+  evo_traj bag result.bag /dmvio/unscaled_pose --save_plot plot.pdf --full_check -as --ref /state_groundtruth_estimate0
+  evo_ape bag result.bag /state_groundtruth_estimate0 /dmvio/unscaled_pose -as
+  evo_rpe bag result.bag /state_groundtruth_estimate0 /dmvio/unscaled_pose -as
 
-  
   cd -
 done
 kill $ROSCORE_PID
