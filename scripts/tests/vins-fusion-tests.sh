@@ -44,7 +44,7 @@ for BAG in "${EUROC_BAGS[@]}"; do
   
   echo -e "458.654 457.296 367.215 248.375 -0.28340811 0.07395907 0.00019359 1.76187114e-05\n752 480\ncrop\n640 480\n" > camera.txt
 
-  rosrun vins vins_node ~/catkin_ws/src/VINS-Fusion/config/euroc/euroc_stereo_imu_config.yaml \
+  rosrun vins vins_node ${project_root_dir}/workspace/src/vins-fusion-cv4/config/euroc/euroc_stereo_imu_config.yaml \
     > ${SEQUENCE_NAME}.output &
   VINS_FUSION_PID=$!
 
@@ -85,10 +85,10 @@ for BAG in "${EUROC_BAGS[@]}"; do
   python3 ${current_directory}/python/cal_rosbag_frequency.py odom_result.bag /vins_estimator/odometry > odom_result.hz
 
   ln -s ${BAG} ${SEQUENCE_NAME}.bag
-  rosbag-merge --outbag_name result --topics /vins_estimator/odometry /vins_estimator/ground_truth --write_bag
-  evo_traj bag result.bag /vins_estimator/odometry --save_plot plot.pdf --full_check -as --ref /vins_estimator/ground_truth
-  evo_ape bag result.bag /vins_estimator/ground_truth /vins_estimator/odometry -as
-  evo_rpe bag result.bag /vins_estimator/ground_truth /vins_estimator/odometry -as
+  rosbag-merge --outbag_name result --topics /vins_estimator/odometry /state_groundtruth_estimate0  --write_bag
+  evo_traj bag result.bag /vins_estimator/odometry --save_plot plot.pdf --full_check -as --ref /state_groundtruth_estimate0 
+  evo_ape bag result.bag /state_groundtruth_estimate0  /vins_estimator/odometry -as
+  evo_rpe bag result.bag /state_groundtruth_estimate0 /vins_estimator/odometry -as
 
   cd -
 done

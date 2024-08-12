@@ -23,6 +23,8 @@ RUN apt-get update && apt-get install -y \
     # required by pangolin
     libgl1-mesa-dev libglew-dev pkg-config libegl1-mesa-dev libwayland-dev libxkbcommon-dev wayland-protocols \
     ros-noetic-catkin python3-catkin-tools ros-noetic-cv-bridge \
+    # required by vins-fusion
+    ros-noetic-image-transport \
     # required by openvins
     libceres-dev && \ 
     apt-get clean autoclean && \

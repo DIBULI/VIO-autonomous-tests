@@ -16,10 +16,5 @@ sudo make install
 
 cd ${project_root_dir}/workspace/src
 git clone https://github.com/HalfVulpes/vins-fusion-cv4.git
-cd ../
-catkin build
 
-source ${project_root_dir}/workspace/devel/setup.bash
-
-echo "source ${project_root_dir}/workspace/devel/setup.bash" >> ~/.bashrc
 echo "VINS-Fusion initialization completed."
