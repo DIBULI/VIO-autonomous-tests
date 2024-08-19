@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install \
     # required by dm-vio-python-tools
     tqdm ruamel.yaml pyquaternion matplotlib tabulate \
-    numpy==1.24.4 evo==1.29.0 rosbag-merge \
+    numpy==1.24.4 evo==1.29.0 \
     # required by converting euroc dataset
     argparse pandas pyyaml
 
