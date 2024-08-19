@@ -50,5 +50,6 @@ RUN bash ${WORKDIR}/VIO-auto-tests/scripts/build-workspace.sh
 COPY scripts/datasets ${WORKDIR}/VIO-auto-tests/scripts/datasets
 COPY scripts/tests ${WORKDIR}/VIO-auto-tests/scripts/tests
 COPY scripts/perform-tests.sh ${WORKDIR}/VIO-auto-tests/scripts/perform-tests.sh
+COPY scripts/perform-tests-customized-dataset.sh ${WORKDIR}/VIO-auto-tests/scripts/perform-tests-customized-dataset.sh
 
 ENTRYPOINT ["/bin/bash", "-i", "/root/VIO-auto-tests/scripts/perform-tests.sh"]

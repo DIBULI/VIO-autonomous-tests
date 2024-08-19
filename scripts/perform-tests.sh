@@ -83,7 +83,7 @@ for BAG in "${EUROC_BAGS[@]}"; do
 
     mkdir -p $TEST_RESULT_PATH/vins-fusion-tests/euroc/$SEQUENCE_NAME
     
-    bash ${current_directory}/tests/vins-fusion-tests.sh  $TEST_RESULT_PATH/vins-fusion-tests/euroc/$SEQUENCE_NAME $SEQUENCE_NAME $BAG /state_groundtruth_estimate0 \
+    bash ${current_directory}/tests/vins-fusion-tests.sh $TEST_RESULT_PATH/vins-fusion-tests/euroc/$SEQUENCE_NAME $SEQUENCE_NAME $BAG /state_groundtruth_estimate0 \
         ${project_root_dir}/workspace/src/vins-fusion-cv4/config/euroc/euroc_stereo_imu_config.yaml
 done
 cd -
