@@ -13,9 +13,8 @@ GT_TOPIC_NAME=$3
 
 sudo rm -r $TEST_RESULT_FOLDER
 
-docker run -v $BAG_PARENT_FOLDER:/data -v ${TEST_RESULT_FOLDER}:${DOCKER_RESULT_DIR}/test-results \
+docker run -v $BAG_PARENT_FOLDER:/data -v ${TEST_RESULT_FOLDER}:${WORKSPACE_DIR}/test-results \
   -v ${project_root_dir}/configs:$WORKSPACE_DIR/configs \
   --entrypoint=/bin/bash ghcr.io/dibuli/vio-autonomous-test:latest \
   -i /root/VIO-auto-tests/scripts/perform-tests-customized-dataset.sh \
-  /data/$BAG_NAME $WORKSPACE_DIR/configs/$CONFIG_NAME
-  
+  /data/$BAG_NAME $WORKSPACE_DIR/configs/$CONFIG_NAME $GT_TOPIC_NAME

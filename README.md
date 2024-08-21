@@ -34,3 +34,16 @@ bash run.sh
 
 The VIOs result will be stored under the folder defined by `TEST_RESULT_FOLDER`.
 
+
+### Test your own dataset on VINS-fusion
+
+1. Before run the shell script, please prepare the vins-fusion configs files under the configs/vins-fusion folder
+
+2. Then execute the following command under the auto-test root directory
+
+```
+BAG=PATH=(where is your bag)
+CONFIG_FILE_NAME=(what's the name of your config file)
+GT_ODOM_TOPIC_NAME=(what's the name of the ground truth odom topic in your bag)
+bash run-customized-dataset.sh $BAG_PATH $CONFIG_FILE_NAME #GT_ODOM_TOPIC_NAME
+```

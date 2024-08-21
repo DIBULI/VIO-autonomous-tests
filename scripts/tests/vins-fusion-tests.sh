@@ -15,7 +15,8 @@ echo "BAG_PATH: $BAG_PATH"
 echo "GT_TOPIC_NAME: $GT_TOPIC_NAME"
 echo "CONFIG_FILE_PATH: $CONFIG_FILE_PATH"
 
-cd $RESULT_FOLDER_PATH
+cd $SEQUENCE_PATH
+mkdir -p results/posegraph
 
 # start the roscore
 roscore &
@@ -30,7 +31,6 @@ rosrun loop_fusion loop_fusion_node $CONFIG_FILE_PATH \
   > $SEQUENCE_NAME-loop-fusion-node.output 2>&1 &
 LOOP_FUSION_PID=$!
 
-# wait for dmvio_ros to be initialized completely
 sleep 5
 
 # for each result, we save the odometry result as a ros bag
@@ -50,10 +50,20 @@ touch $SEQUENCE_PATH/$CSV_FILE
 
 while ps -p $ROSBAG_PLAY_PID > /dev/null 2>&1; do
   TIMESTAMP=$(date +%s%3N)
-  CPU_MEM_USAGE=$(ps -p $VINS_NODE_PID -o %cpu,%mem --no-headers)
+  VINS_NODE_CPU_MEM_USAGE=$(ps -p $VINS_NODE_PID -o %cpu,%mem --no-headers)
+  LOOP_FUSION_CPU_MEM_USAGE=$(ps -p $LOOP_FUSION_PID -o %cpu,%mem --no-headers)
 
-  if [ -n "$CPU_MEM_USAGE" ]; then
-      echo "$TIMESTAMP $CPU_MEM_USAGE" >> "$CSV_FILE"
+  CPU1=$(echo $VINS_NODE_CPU_MEM_USAGE | awk '{print $1}')
+  MEM1=$(echo $VINS_NODE_CPU_MEM_USAGE | awk '{print $2}')
+
+  CPU2=$(echo $LOOP_FUSION_CPU_MEM_USAGE | awk '{print $1}')
+  MEM2=$(echo $LOOP_FUSION_CPU_MEM_USAGE | awk '{print $2}')
+
+  TOTAL_CPU=$(echo "$CPU1 + $CPU2" | bc)
+  TOTAL_MEM=$(echo "$MEM1 + $MEM2" | bc)
+
+  if [[ -n "$TOTAL_CPU" && -n "$TOTAL_MEM" ]]; then
+    echo "$TIMESTAMP $TOTAL_CPU $TOTAL_MEM" >> "$CSV_FILE"
   fi
 
   sleep 0.1
@@ -80,4 +90,3 @@ evo_ape bag result.bag $GT_TOPIC_NAME /vins_estimator/odometry -as
 evo_rpe bag result.bag $GT_TOPIC_NAME /vins_estimator/odometry -as
 
 cd -
-

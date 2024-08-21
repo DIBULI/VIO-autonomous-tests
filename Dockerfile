@@ -6,6 +6,7 @@ WORKDIR ${WORKDIR}
 # first install several commonly used dependency
 
 RUN apt-get update && apt-get install -y \
+    bc \
     vim \
     python3-pip \
     libsuitesparse-dev \
