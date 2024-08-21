@@ -42,8 +42,10 @@ The VIOs result will be stored under the folder defined by `TEST_RESULT_FOLDER`.
 2. Then execute the following command under the auto-test root directory
 
 ```
-BAG=PATH=(where is your bag)
+BAG_PATH=(where is your bag)
 CONFIG_FILE_NAME=(what's the name of your config file)
 GT_ODOM_TOPIC_NAME=(what's the name of the ground truth odom topic in your bag)
-bash run-customized-dataset.sh $BAG_PATH $CONFIG_FILE_NAME #GT_ODOM_TOPIC_NAME
+bash run-customized-dataset.sh $BAG_PATH $CONFIG_FILE_NAME $GT_ODOM_TOPIC_NAME
 ```
+
+3. All the result will be store under the folder `~/VIOs-auto-test-results-customized-dataset`, if you want ot change this path, please revise the value of parameter TEST_RESULT_FOLDER in the `run-customized-dataset.sh`.
